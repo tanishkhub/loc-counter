@@ -8,12 +8,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Count LOC for user
+      - name: Install cloc
+        run: sudo apt-get install cloc
+
+      - name: Clone all repos and count LOC
         run: |
-          git clone https://github.com/benbalter/count-org-loc.git
-          cd count-org-loc
-          pip install -r requirements.txt
-          python count_org_loc.py --user tanishkhub
+          USERNAME=tanishkhub
+          mkdir repos
+          cd repos
+
+          for repo in $(curl -s https://api.github.com/users/$USERNAME/repos | grep clone_url | cut -d '"' -f 4); do
+            git clone --depth 1 $repo
+          done
+
+          cloc .
