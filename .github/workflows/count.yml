@@ -1,0 +1,19 @@
+name: Count LOC
+
+on:
+  workflow_dispatch:
+
+jobs:
+  count:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Count LOC for user
+        run: |
+          git clone https://github.com/benbalter/count-org-loc.git
+          cd count-org-loc
+          pip install -r requirements.txt
+          python count_org_loc.py --user tanishkhub
